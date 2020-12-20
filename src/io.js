@@ -4,8 +4,15 @@ import fs from 'fs'
 const fileDir = `${os.homedir()}/readr.txt`;
 
 export function addUrl(url) {
-    fs.appendFileSync(fileDir, `${url}\n`);
-    console.log(`Added source ${url}.\n`);
+    confirmFileExists();
+    if (!isValidURL(url)){
+        console.log('You did not enter a valid URL.\n');
+    } else if(isDuplicateUrl(url)) {
+        console.log('You entered a duplicate URL.\n');
+    } else {
+        fs.appendFileSync(fileDir, `${url}\n`);
+        console.log(`Added source ${url}.\n`);
+    }
 }
 
 export function removeUrl(url) {
@@ -53,4 +60,19 @@ function confirmFileExists() {
         fs.writeFileSync(fileDir, 'https://www.reddit.com/.rss\n');
         console.log(`${fileDir} was created.`);
     }
+}
+
+function isValidURL(url) {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(url);
+}
+
+function isDuplicateUrl(url) {
+    let urls = getUrls();
+    return urls.includes(url);
 }
