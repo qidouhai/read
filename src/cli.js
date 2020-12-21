@@ -1,8 +1,8 @@
-import arg from 'arg';
-import { printPath, printUrls, addUrl, removeUrl, printHelpText, getUrls } from './io'
-import { promptAndRead } from './read';
+import arg from 'arg'
+import { printPath, printUrls, addUrl, removeUrl, printHelpText } from './io'
+import { promptAndRead } from './read'
 
-function parseArgumentsIntoOptions(rawArgs) {
+function parseArgumentsIntoOptions (rawArgs) {
   const args = arg(
     {
       '--src': Boolean,
@@ -22,62 +22,60 @@ function parseArgumentsIntoOptions(rawArgs) {
       argv: rawArgs.slice(2),
       stopAtPositional: false
     }
-  );
+  )
   return {
     printUrls: args['--src'] || false,
     addUrl: args['--add'],
     removeUrl: args['--remove'],
     printPath: args['--path'] || false,
-    help: args['--help'] || false,
-  };
+    help: args['--help'] || false
+  }
 }
 
-async function handleOptions(options) {
-
+async function handleOptions (options) {
   // if trying to read
   if (options.printUrls === false &&
     options.addUrl === undefined &&
     options.removeUrl === undefined &&
     options.printPath === false &&
     options.help === false) {
-      promptAndRead();
+    promptAndRead()
   }
 
   if (options.printUrls) {
-    printUrls();
+    printUrls()
   }
 
   if (options.addUrl) {
     options.addUrl.forEach((source) => {
-      // duplicate check and validate url
-      addUrl(source);
-    });
+      addUrl(source)
+    })
   }
 
   if (options.removeUrl) {
     options.removeUrl.forEach((source) => {
-      removeUrl(source);
-    });
+      removeUrl(source)
+    })
   }
 
   if (options.printPath) {
-    printPath();
+    printPath()
   }
 
   if (options.help) {
-    printHelpText();
+    printHelpText()
   }
 }
 
-export async function cli(args) {
+export async function cli (args) {
   try {
-    let options = parseArgumentsIntoOptions(args);
-    await handleOptions(options);
+    const options = parseArgumentsIntoOptions(args)
+    await handleOptions(options)
   } catch (err) {
     if (err.code === 'ARG_UNKNOWN_OPTION' || err.code === 'ARG_MISSING_REQUIRED_SHORTARG') {
-      console.log(err.message);
+      console.log(err.message)
     } else {
-      throw err;
+      throw err
     }
   }
 }
