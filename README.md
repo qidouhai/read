@@ -1,4 +1,10 @@
-# rss-cli
+# readr
+
+```console
+$ npm i #install dependencies
+$ npm link #create a symlink to project in the global folder
+$ readr #read news
+```
 
 ```console
 $ readr --help
