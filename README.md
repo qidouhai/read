@@ -1,13 +1,14 @@
-# readr
+> Command line interface that makes it easy to read RSS feeds.
 
 ```console
 $ npm i # install dependencies
 $ npm i -g # globally install package
-$ read go # read news
+$ readr go # read from RSS
 ```
 
 ```console
-$ read
+$ readr help
+Usage: readr [options] [command]
 
 Options:
   -h, --help      display help for command
@@ -19,5 +20,4 @@ Commands:
   remove <URL>    Remove a RSS URL to your feed.
   path            Print the path to the file containing your feed URLs.
   help [command]  display help for command
-
 ```

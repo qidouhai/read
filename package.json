@@ -1,17 +1,17 @@
 {
-  "name": "read",
+  "name": "readr",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "read": "index.js"
+    "readr": "index.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "lint": "tsc && tslint --project ."
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
