@@ -1,3 +1,5 @@
+![Tests](https://github.com/brianbianchi/read/workflows/Tests/badge.svg)
+
 > Command line interface that makes it easy to read RSS feeds.
 
 ```console
