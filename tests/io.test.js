@@ -5,7 +5,7 @@ const mockRc = 'https://news.ycombinator.com/rss/\nhttps://www.reddit.com/.rss\n
 jest.mock('fs');
 
 describe('addUrl', () => {
-    test('adds urls to rc file', done => {
+    test('adds url to rc file', done => {
         const url = 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml';
         const logSpy = jest.spyOn(console, 'log');
         fs.existsSync.mockReturnValue(true);
@@ -22,7 +22,7 @@ describe('addUrl', () => {
 
     test('doesn\'t add invalid url', done => {
         const url = 'not-valid-url';
-        const logSpy = jest.spyOn(console, 'error');
+        const logSpy = jest.spyOn(console, 'log');
         fs.existsSync.mockReturnValue(true);
 
         io.addUrl(url);
@@ -36,7 +36,7 @@ describe('addUrl', () => {
 
     test('doesn\'t add duplicate url', done => {
         const url = 'https://www.reddit.com/.rss';
-        const logSpy = jest.spyOn(console, 'error');
+        const logSpy = jest.spyOn(console, 'log');
         fs.existsSync.mockReturnValue(true);
         fs.readFileSync.mockReturnValue(mockRc);
 
@@ -46,6 +46,39 @@ describe('addUrl', () => {
         expect(fs.readFileSync).toBeCalledWith(io.fileDir, 'utf8');
         expect(fs.appendFileSync).toHaveBeenCalledTimes(0);
         expect(logSpy).toBeCalledWith(`${url} is a duplicate URL.`);
+        done();
+    });
+});
+
+describe('removeUrl', () => {
+    test('removes url to rc file', done => {
+        const url = "https://www.reddit.com/.rss"
+        const expectedWrite = "https://news.ycombinator.com/rss/\n";
+        const logSpy = jest.spyOn(console, 'log');
+        fs.existsSync.mockReturnValue(true);
+        fs.readFileSync.mockReturnValue(mockRc);
+
+        io.removeUrl(url);
+
+        expect(fs.existsSync).toBeCalledWith(io.fileDir);
+        expect(fs.readFileSync).toBeCalledWith(io.fileDir, 'utf8');
+        expect(fs.writeFileSync).toBeCalledWith(io.fileDir, expectedWrite);
+        expect(logSpy).toBeCalledWith(`Removed ${url}.`);
+        done();
+    });
+
+    test('removed url dne in rc file', done => {
+        const url = 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml';
+        const logSpy = jest.spyOn(console, 'log');
+        fs.existsSync.mockReturnValue(true);
+        fs.readFileSync.mockReturnValue(mockRc);
+
+        io.removeUrl(url);
+
+        expect(fs.existsSync).toBeCalledWith(io.fileDir);
+        expect(fs.readFileSync).toBeCalledWith(io.fileDir, 'utf8');
+        expect(fs.writeFileSync).toHaveBeenCalledTimes(0);
+        expect(logSpy).toBeCalledWith(`${url} does not exist in \"${io.fileDir}\".`);
         done();
     });
 });
